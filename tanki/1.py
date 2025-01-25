@@ -401,7 +401,8 @@ button_group.add(button_exit)
 restart()
 drawMaps('1.txt')
 
-while True:
+
+    clock.tick(FPS)while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -413,4 +414,3 @@ while True:
     elif lvl == 'exit':
         pygame.quit()
         sys.exit()
-    clock.tick(FPS)
