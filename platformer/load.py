@@ -1,6 +1,6 @@
 import pygame
 from script import load_image
-player_image = load_image('image/player')
+#player_image = load_image('image/player')
 earth_image = pygame.image.load('image/blocks/earth.png').convert_alpha()
 center_image = pygame.image.load('image/blocks/center.png').convert_alpha()
 water_image = pygame.image.load('image/blocks/water.png').convert_alpha()
@@ -19,3 +19,7 @@ hp_image = pygame.image.load('image/item/hp.png').convert_alpha()
 mp_image = pygame.image.load('image/item/mp.png').convert_alpha()
 qwest_1_image = pygame.image.load('image/item/qwest 1.png').convert_alpha()
 flag_image = pygame.image.load('image/item/flag.png').convert_alpha()
+player_image_b = load_image('image/player/bottom').convert.alpha()
+player_image_t = load_image('image/player/top').convert.alpha()
+player_image_r = load_image('image/player/right').convert.alpha()
+player_image_l = load_image('image/player/left').convert.alpha()

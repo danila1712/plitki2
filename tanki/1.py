@@ -402,15 +402,16 @@ restart()
 drawMaps('1.txt')
 
 
-    clock.tick(FPS)while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+clock.tick(FPS)
+while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+             pygame.quit()
+            sys.exit()
+        if lvl == "game":
+            lvlGame()
+        elif lvl == 'menu':
+            startMenu()
+        elif lvl == 'exit':
             pygame.quit()
             sys.exit()
-    if lvl == "game":
-        lvlGame()
-    elif lvl == 'menu':
-        startMenu()
-    elif lvl == 'exit':
-        pygame.quit()
-        sys.exit()
