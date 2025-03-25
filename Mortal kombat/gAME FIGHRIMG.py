@@ -76,7 +76,7 @@ class Button(pygame.sprite.Sprite):
     def update(self):
         global lvl
 
-        text_render = font.render(self.text,True,'White')
+        text_render = font.render(self.text,True,'Black')
         sc.blit(text_render,(self.rect.x + 80,self.rect.y + 5))
 
         click = pygame.mouse.get_pos()
