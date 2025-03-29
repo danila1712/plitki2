@@ -274,7 +274,7 @@ class Player(pygame.sprite.Sprite):
 
 
 restart()
-drawmaps('безымянный.txt')
+drawmaps('1.txt')
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
