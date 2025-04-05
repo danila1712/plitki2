@@ -1,6 +1,8 @@
 import pygame
 import sys
 
+
+
 pygame.init()
 WIDTH = 1280
 HEIGHT = 800
@@ -11,18 +13,21 @@ lvl_game = 'game'
 from load import *
 timer_spawn = 0
 def restart():
-    global scorpion_group,tower_group,tower_1_group,bullet_group,bullet_1_group,edit_dir_group,bush_group,bush_tower_group,grass_group,panel_group
+    global scorpion_group,tower_group,tower_1_group,tower_2_group,bullet_group,bullet_1_group,edit_dir_group,bush_group,bush_tower_group,grass_group,panel_group,tower_shop_1,tower_shop_2
     scorpion_group = pygame.sprite.Group()
     tower_group = pygame.sprite.Group()
     tower_1_group = pygame.sprite.Group()
+    tower_2_group = pygame.sprite.Group()
     bullet_group = pygame.sprite.Group()
     bullet_1_group = pygame.sprite.Group()
     edit_dir_group = pygame.sprite.Group()
-
     bush_group = pygame.sprite.Group()
     bush_tower_group = pygame.sprite.Group()
     grass_group = pygame.sprite.Group()
     panel_group = pygame.sprite.Group()
+    tower_shop_1 = Tower_1(tower_1_on_image, (1205,162))
+    tower_1_group.add(tower_shop_1)
+
 
 def drawMaps(file):
     maps = []
@@ -56,6 +61,7 @@ def drawMaps(file):
                 right = Edit_dir_tile(right_image, pos, 'right')
                 edit_dir_group.add(right)
             elif maps[i][j] == '7':
+
                 top = Edit_dir_tile(top_image, pos, 'top')
                 edit_dir_group.add(top)
             elif maps[i][j] == '8':
@@ -71,25 +77,27 @@ def game_lvl():
     grass_group.draw(sc)
     tower_group.update()
     tower_group.draw(sc)
-    tower_1_group.update()
-    tower_1_group.draw(sc)
+    tower_2_group.update()
+    tower_2_group.draw(sc)
     bullet_group.update()
     bullet_group.draw(sc)
     bullet_1_group.update()
     bullet_1_group.draw(sc)
-    edit_dir_group.update()
-    edit_dir_group.draw(sc)
     panel_group.update()
     panel_group.draw(sc)
-    scorpion_group.update()
-    scorpion_group.draw(sc)
     panel_group.update()
     panel_group.draw(sc)
     bush_tower_group.update()
     bush_tower_group.draw(sc)
+    edit_dir_group.update()
+    edit_dir_group.draw(sc)
+    scorpion_group.update()
+    scorpion_group.draw(sc)
+    tower_1_group.update()
+    tower_1_group.draw(sc)
     pygame.display.update()
 
-class Scorpoin(pygame.sprite.Sprite):
+class Scorpion(pygame.sprite.Sprite):
     def __init__(self, image, pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = image[0]
@@ -129,36 +137,92 @@ class Hp(pygame.sprite.Sprite):
     def __init__(self, image, pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
+        self.hp = 500
 
 class Money(pygame.sprite.Sprite):
     def __init__(self,image,pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
-
+        timer_money = 0
 
 
 class Tower(pygame.sprite.Sprite):
     def __init__(self, image, pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
+        self.lvl = 1
         self.rect = self.image.get_rect()
+        self.rect.center = pos
+        self.damage = 30
+        self.scorpion = None
+        self.timer_shot = 0
+        self.upgrade = False
+
+    def update(self):
+            if self.scorpion is None:
+                for enemy in scorpion_group:
+                    if ((self.rect.centerx - enemy.rect.centerx) ** 2 + (
+                            self.rect.centerx - enemy.rect.centery) ** 2) ** 0.5 < 200:
+                        self.scorpion = scorpion_image
+                        break
+            if self.scorpion not in scorpion_group:
+
+                self.scorpion = None
+
+            if self.scorpion != None and self.timer_shot / FPS > 1:
+                x_1 = self.rect.centerx
+                y_1 = self.rect.top
+                x_2 = scorpion.rect.centerx
+                y_2 = self.enemy.rect.centerx
+            bullet = Bullet(self.current_bullet_image, (x_1, y_1, x_2, y_2), self.damage)
+            bullet_group.add(bullet)
 
 class Tower_1(pygame.sprite.Sprite):
     def __init__(self, image, pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
     def update(self):
-         pass
+        self.buy = False
+        self.timer_click = 0
 
-class Bullet(pygame.sprite.Sprite):
-    def __init__(self, image, pos):
+class Tower_2(pygame.sprite.Sprite):
+    def __init__(self,image,pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+
+class Tower_2_1(pygame.sprite.Sprite):
+    def __init__(self,image,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, image, pos, damage):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.speeed = 5
+        self.damage = damage
+        self.start_pos = pygame.math.Vector2(pos[0], pos[1])
+        self.end_pos = pygame.math.Vector2(pos[2],pos[3])
+        self.velocity = (self.end_pos - self.start_pos).normalize() * self.speed
+        self.rect.center = self.start_pos
+
+    def update(self ):
+        self.rect.centeret += self .velocity
+
+
 
 class Bullet_1(pygame.sprite.Sprite):
-    def __init__(self, image, pos):
+    def __init__(self, image, pos,damage):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
         self.rect = self.image.get_rect()
@@ -171,7 +235,6 @@ class Edit_dir_tile(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.dir = dir
-
 
 class Bush(pygame.sprite.Sprite):
     def __init__(self, image, pos):
@@ -188,6 +251,7 @@ class Bush_tower(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+
 
 class Grass(pygame.sprite.Sprite):
     def __init__(self, image, pos):
